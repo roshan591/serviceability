@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RateIQ — Marketplace Master</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d12;--sur:#111520;--sur2:#161c2a;--bdr:#1f2940;--acc:#00e5b0;--acc2:#ff6b35;--acc3:#4d9fff;--tx:#e8edf5;--mu:#5a6580;--dng:#ff4757;--warn:#f5a623;--mono:'DM Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--tx);font-family:var(--body);min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}
+.shell{display:flex;height:100vh;overflow:hidden}.sidebar{width:220px;min-width:220px;background:var(--sur);border-right:1px solid var(--bdr);display:flex;flex-direction:column}.main{flex:1;overflow-y:auto}
+.logo{padding:22px 20px 18px;border-bottom:1px solid var(--bdr)}.logo-mark{font-family:var(--disp);font-size:1.4rem;font-weight:800;letter-spacing:-.03em}.logo-mark span{color:var(--acc)}
+.logo-sub{font-size:.6rem;color:var(--mu);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.nav{padding:14px 10px;flex:1}.nav-sec{font-size:.6rem;color:var(--mu);font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:8px 8px 4px}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:.84rem;color:var(--mu);transition:all .15s;margin-bottom:2px}
+.ni:hover{color:var(--tx);background:var(--sur2)}.ni.active{color:var(--acc);background:rgba(0,229,176,.08)}
+.ni .dot{width:7px;height:7px;border-radius:50%;background:var(--bdr);flex-shrink:0}.ni.done .dot{background:var(--acc)}
+.sfoot{padding:14px;border-top:1px solid var(--bdr);font-size:.7rem;color:var(--mu);font-family:var(--mono)}
+.topbar{padding:16px 28px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;background:var(--sur);position:sticky;top:0;z-index:10}
+.pg-title{font-family:var(--disp);font-size:1.05rem;font-weight:700}.pg-sub{font-size:.73rem;color:var(--mu);margin-top:1px}
+.tbacts{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:.78rem;font-family:var(--body);cursor:pointer;border:none;font-weight:500;transition:all .15s}
+.btn-ghost{background:transparent;color:var(--mu);border:1px solid var(--bdr)}.btn-ghost:hover{color:var(--tx);border-color:var(--mu)}
+.btn-acc{background:var(--acc);color:var(--bg);font-weight:700}.btn-acc:hover{background:#00ffca;transform:translateY(-1px)}
+.btn-dng{background:rgba(255,71,87,.1);color:var(--dng);border:1px solid rgba(255,71,87,.25)}.btn-dng:hover{background:rgba(255,71,87,.18)}
+.btn-sm{padding:5px 11px;font-size:.72rem}
+.content{padding:24px 28px}
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;margin-bottom:18px}
+.ch{padding:15px 20px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.ct{font-family:var(--disp);font-size:.88rem;font-weight:700}.csub{font-size:.72rem;color:var(--mu);margin-top:2px}
+.cb{padding:20px}.fg{margin-bottom:14px}
+.fl{font-size:.68rem;color:var(--mu);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:block}
+.fi,.fs{width:100%;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;padding:9px 12px;color:var(--tx);font-family:var(--body);font-size:.86rem;outline:none;transition:border-color .15s}
+.fi:focus,.fs:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(0,229,176,.08)}.fs option{background:var(--sur)}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.fhint{font-size:.67rem;color:var(--mu);margin-top:3px}
+.divider{border:none;border-top:1px solid var(--bdr);margin:14px 0}
+.alrt{border-radius:10px;padding:11px 15px;font-size:.8rem;display:flex;align-items:flex-start;gap:9px;margin-bottom:14px}
+.ai{background:rgba(77,159,255,.08);border:1px solid rgba(77,159,255,.2);color:var(--acc3)}
+.as{background:rgba(0,229,176,.08);border:1px solid rgba(0,229,176,.2);color:var(--acc)}
+.bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:.66rem;font-family:var(--mono);font-weight:500}
+.bg{background:rgba(0,229,176,.1);color:var(--acc)}.br{background:rgba(255,71,87,.1);color:var(--dng)}
+.bb{background:rgba(77,159,255,.1);color:var(--acc3)}.bgr{background:rgba(90,101,128,.15);color:var(--mu)}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{padding:9px 12px;text-align:left;font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);border-bottom:1px solid var(--bdr)}
+td{padding:10px 12px;border-bottom:1px solid rgba(31,41,64,.5);vertical-align:middle}
+tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,.015)}
+.tw{overflow-x:auto}
+.empty{text-align:center;padding:48px 30px;color:var(--mu)}.empty-ic{font-size:2.2rem;margin-bottom:12px;opacity:.4}
+.empty-t{font-family:var(--disp);font-size:.92rem;color:var(--tx);margin-bottom:5px}.empty-d{font-size:.78rem}
+.conn-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:.72rem;font-family:var(--mono)}
+.conn-pill.connected{background:rgba(0,229,176,.1);color:var(--acc);border:1px solid rgba(0,229,176,.25)}
+.conn-pill.disconnected{background:rgba(255,71,87,.1);color:var(--dng);border:1px solid rgba(255,71,87,.25)}
+.conn-dot{width:6px;height:6px;border-radius:50%}.connected .conn-dot{background:var(--acc)}.disconnected .conn-dot{background:var(--dng)}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:12px 16px;font-size:.8rem;z-index:999;display:flex;align-items:center;gap:9px;transform:translateY(50px);opacity:0;transition:all .3s;pointer-events:none;max-width:340px}
+.toast.show{transform:translateY(0);opacity:1}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--acc);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding-top:40px;overflow-y:auto}
+.modal{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;width:660px;max-width:95vw;display:flex;flex-direction:column;margin-bottom:40px}
+.mhdr{padding:18px 22px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.mhdr-title{font-family:var(--disp);font-size:.95rem;font-weight:700}
+.mbody{padding:22px;max-height:72vh;overflow-y:auto}
+.mfoot{padding:14px 22px;border-top:1px solid var(--bdr);display:flex;justify-content:flex-end;gap:8px}
+.carrier-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;max-height:300px;overflow-y:auto;border:1px solid var(--bdr);border-radius:8px;padding:10px;background:var(--bg)}
+.cc{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .12s}
+.cc:hover{background:var(--sur2)}.cc input{width:14px;height:14px;accent-color:var(--acc);cursor:pointer;flex-shrink:0}
+.cc label{font-size:.76rem;cursor:pointer;flex:1;line-height:1.3}
+.ck{font-family:var(--mono);font-size:.63rem;color:var(--mu);display:block;margin-top:1px}
+.mp-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:12px;padding:16px;display:flex;gap:14px;transition:border-color .15s;margin-bottom:10px}
+.mp-card:hover{border-color:var(--mu)}.mp-info{flex:1;min-width:0}
+.mp-name{font-family:var(--disp);font-weight:700;font-size:.92rem;margin-bottom:4px}
+.mp-note{font-size:.72rem;color:var(--mu);margin-bottom:8px}
+.mp-carriers{display:flex;flex-wrap:wrap;gap:4px}
+.mp-actions{display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.connect-bar{background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:16px;margin-bottom:18px}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="sidebar">
+  <div class="logo"><div class="logo-mark">Rate<span>IQ</span></div><div class="logo-sub">Config Setup</div></div>
+  <nav class="nav">
+    <div class="nav-sec">Masters</div>
+    <div class="ni done" onclick="window.location='step1-carrier-master.html'"><span class="dot"></span>1. Carrier Master</div>
+    <div class="ni active"><span class="dot"></span>2. Marketplace Master</div>
+    <div class="ni done" onclick="window.location='step2-base-rates.html'"><span class="dot"></span>3. Base Rates</div>
+    <div class="ni"><span class="dot"></span>4. Zone Mapping</div>
+    <div class="ni"><span class="dot"></span>5. Surcharges</div>
+    <div class="ni"><span class="dot"></span>6. DIM Rules</div>
+    <div class="nav-sec">App</div>
+    <div class="ni"><span class="dot"></span>Rate Calculator</div>
+  </nav>
+  <div class="sfoot" id="connStatus">Not connected</div>
+</div>
+<div class="main">
+<div class="topbar">
+  <div><div class="pg-title">Marketplace Master</div><div class="pg-sub">Assign carriers per marketplace · rate calculator filters by marketplace</div></div>
+  <div class="tbacts">
+    <div class="conn-pill disconnected" id="connPill"><span class="conn-dot"></span><span id="connPillTxt">Not connected</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="loadAll()">↺ Refresh</button>
+    <button class="btn btn-ghost btn-sm" onclick="dlTemplate()">⬇ Template</button>
+    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('csvFile').click()">⬆ Import CSV</button>
+    <input type="file" id="csvFile" style="display:none" accept=".csv" onchange="importCSV(this)">
+    <button class="btn btn-acc" onclick="openAddModal()">+ Add Marketplace</button>
+  </div>
+</div>
+<div class="content">
+
+  <div class="connect-bar" id="connectBar">
+    <div style="font-size:.8rem;font-weight:500;margin-bottom:10px">Connect to Supabase</div>
+    <div class="fr2">
+      <div><label class="fl">Project URL</label><input class="fi" id="sbUrl" placeholder="https://xxxx.supabase.co"></div>
+      <div><label class="fl">Anon Key</label><input class="fi" id="sbKey" type="password" placeholder="eyJ..."></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:12px">
+      <button class="btn btn-acc btn-sm" onclick="connect()">Connect</button>
+      <span id="connResult" style="font-size:.75rem;color:var(--mu)"></span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px" id="statsRow" style="display:none">
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:14px">
+      <div style="font-size:.67rem;color:var(--mu);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em">Marketplaces</div>
+      <div style="font-family:var(--disp);font-size:1.6rem;font-weight:800;margin:3px 0" id="statMp">—</div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:14px">
+      <div style="font-size:.67rem;color:var(--mu);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em">Total Assignments</div>
+      <div style="font-family:var(--disp);font-size:1.6rem;font-weight:800;margin:3px 0" id="statAssign">—</div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:14px">
+      <div style="font-size:.67rem;color:var(--mu);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em">Active Carriers</div>
+      <div style="font-family:var(--disp);font-size:1.6rem;font-weight:800;margin:3px 0" id="statCarriers">—</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center">
+    <input class="fi" id="mpSearch" placeholder="Search marketplace…" oninput="renderList()" style="max-width:260px;padding:8px 12px;font-size:.82rem">
+    <div style="display:flex;gap:3px;background:var(--sur);border:1px solid var(--bdr);border-radius:8px;padding:3px">
+      <button class="btn btn-sm" id="vCards" onclick="setView('cards')" style="background:var(--sur2);color:var(--tx)">Cards</button>
+      <button class="btn btn-sm" id="vTable" onclick="setView('table')" style="background:transparent;color:var(--mu)">Table</button>
+    </div>
+  </div>
+
+  <div id="mpList">
+    <div class="empty"><div class="empty-ic">🛍️</div><div class="empty-t">No marketplaces yet</div><div class="empty-d">Connect and click + Add Marketplace</div></div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="mpModal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="mhdr">
+      <div class="mhdr-title" id="modalTitle">Add Marketplace</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="fr2">
+        <div class="fg"><label class="fl">Marketplace Name</label><input class="fi" id="mName" placeholder="e.g. Shopify"></div>
+        <div class="fg"><label class="fl">Status</label><select class="fs" id="mActive"><option value="true">Active</option><option value="false">Inactive</option></select></div>
+      </div>
+      <div class="fg"><label class="fl">Notes</label><input class="fi" id="mNotes" placeholder="e.g. US domestic only"></div>
+      <div class="divider"></div>
+      <div class="fg">
+        <label class="fl">Assign Carriers</label>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <input class="fi" id="cSearch" placeholder="Search carriers…" oninput="filterCList()" style="max-width:220px;padding:6px 10px;font-size:.78rem">
+          <button class="btn btn-ghost btn-sm" onclick="selAll()">All</button>
+          <button class="btn btn-ghost btn-sm" onclick="selNone()">None</button>
+          <span style="font-size:.7rem;color:var(--mu);font-family:var(--mono)" id="selCnt">0 selected</span>
+        </div>
+        <div class="carrier-grid" id="cGrid"></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-dng btn-sm" id="delBtn" style="display:none;margin-right:auto" onclick="deleteMp()">🗑 Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-acc" id="saveBtn" onclick="saveMp()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="tIcon">✅</span><span id="tMsg"></span></div>
+
+<script>
+let SB_URL='',SB_KEY='',isConn=false;
+let carriers=[],marketplaces=[],links=[],editId=null,view='cards';
+
+window.addEventListener('load',()=>{
+  const u=sessionStorage.getItem('sb_url'),k=sessionStorage.getItem('sb_key');
+  if(u&&k){document.getElementById('sbUrl').value=u;document.getElementById('sbKey').value=k;SB_URL=u;SB_KEY=k;connect(true);}
+});
+
+async function sb(path,method='GET',body=null,extra={}){
+  const h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation',...extra};
+  const o={method,headers:h};if(body)o.body=JSON.stringify(body);
+  const r=await fetch(SB_URL+'/rest/v1/'+path,o);
+  const t=await r.text();let d;try{d=JSON.parse(t);}catch{d=t;}
+  if(!r.ok)throw new Error(d?.message||d?.error||JSON.stringify(d)||r.statusText);
+  return d;
+}
+
+async function connect(silent=false){
+  SB_URL=document.getElementById('sbUrl').value.trim().replace(/\/$/,'');
+  SB_KEY=document.getElementById('sbKey').value.trim();
+  if(!SB_URL||!SB_KEY){if(!silent)toast('⚠️','Enter URL and Key');return;}
+  try{
+    await sb('marketplaces?select=id&limit=1');
+    isConn=true;sessionStorage.setItem('sb_url',SB_URL);sessionStorage.setItem('sb_key',SB_KEY);
+    setConn(true);document.getElementById('connectBar').style.display='none';
+    document.getElementById('statsRow').style.display='grid';
+    await loadAll();if(!silent)toast('✅','Connected!');
+  }catch(e){setConn(false);document.getElementById('connResult').innerHTML=`<span style="color:var(--dng)">✗ ${e.message}</span>`;if(!silent)toast('⚠️','Failed: '+e.message);}
+}
+
+function setConn(y){
+  const p=document.getElementById('connPill');p.className='conn-pill '+(y?'connected':'disconnected');
+  document.getElementById('connPillTxt').textContent=y?'Connected':'Not connected';
+  document.getElementById('connStatus').textContent=y?'● Connected':'○ Not connected';
+}
+
+async function loadAll(){
+  if(!isConn)return;
+  try{
+    [marketplaces,carriers,links]=await Promise.all([
+      sb('marketplaces?order=name.asc'),
+      sb('carriers?select=id,name,service&active=eq.true&order=service.asc'),
+      sb('marketplace_carriers?select=marketplace,service'),
+    ]);
+    document.getElementById('statMp').textContent=marketplaces.length;
+    document.getElementById('statAssign').textContent=links.length;
+    document.getElementById('statCarriers').textContent=carriers.length;
+    renderList();
+  }catch(e){toast('⚠️','Load failed: '+e.message);}
+}
+
+function getMpCarriers(mpName){
+  const s=new Set(links.filter(l=>l.marketplace===mpName).map(l=>l.service));
+  return carriers.filter(c=>s.has(c.service));
+}
+
+function setView(v){
+  view=v;
+  document.getElementById('vCards').style.cssText=`background:${v==='cards'?'var(--sur2)':'transparent'};color:${v==='cards'?'var(--tx)':'var(--mu)'}`;
+  document.getElementById('vTable').style.cssText=`background:${v==='table'?'var(--sur2)':'transparent'};color:${v==='table'?'var(--tx)':'var(--mu)'}`;
+  renderList();
+}
+
+function renderList(){
+  const q=document.getElementById('mpSearch').value.toLowerCase();
+  const f=marketplaces.filter(m=>m.name.toLowerCase().includes(q));
+  const el=document.getElementById('mpList');
+  if(!isConn){el.innerHTML='<div class="empty"><div class="empty-ic">🔌</div><div class="empty-t">Not connected</div></div>';return;}
+  if(!f.length){el.innerHTML='<div class="empty"><div class="empty-ic">🛍️</div><div class="empty-t">No marketplaces yet</div><div class="empty-d">Click + Add Marketplace</div></div>';return;}
+
+  if(view==='cards'){
+    el.innerHTML=f.map(m=>{
+      const mc=getMpCarriers(m.name);
+      return`<div class="mp-card">
+        <div class="mp-info">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <div class="mp-name">${m.name}</div>
+            <span class="bdg ${m.active?'bg':'br'}">${m.active?'Active':'Inactive'}</span>
+          </div>
+          ${m.notes?`<div class="mp-note">${m.notes}</div>`:''}
+          <div class="mp-carriers">${mc.length?mc.map(c=>`<span class="bdg bb" style="margin-bottom:3px">${c.service}</span>`).join(' '):'<span style="font-size:.72rem;color:var(--mu)">No carriers assigned</span>'}</div>
+          <div style="font-size:.7rem;color:var(--mu);margin-top:8px;font-family:var(--mono)">${mc.length} carrier${mc.length!==1?'s':''}</div>
+        </div>
+        <div class="mp-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openEdit('${m.id}')">Edit</button>
+          <button class="btn btn-dng btn-sm" onclick="confirmDel('${m.id}','${m.name}')">Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }else{
+    el.innerHTML=`<div class="card"><div class="tw"><table>
+      <thead><tr><th>Marketplace</th><th>Status</th><th>Carriers</th><th>#</th><th>Notes</th><th></th></tr></thead>
+      <tbody>${f.map(m=>{const mc=getMpCarriers(m.name);return`<tr>
+        <td><strong>${m.name}</strong></td>
+        <td><span class="bdg ${m.active?'bg':'br'}">${m.active?'Active':'Inactive'}</span></td>
+        <td style="max-width:360px">${mc.map(c=>`<span class="bdg bb" style="margin:1px 2px;display:inline-flex">${c.service}</span>`).join('')||'<span style="color:var(--mu);font-size:.72rem">none</span>'}</td>
+        <td style="font-family:var(--mono);color:var(--acc)">${mc.length}</td>
+        <td style="font-size:.72rem;color:var(--mu)">${m.notes||'—'}</td>
+        <td style="text-align:right"><button class="btn btn-ghost btn-sm" onclick="openEdit('${m.id}')">Edit</button></td>
+      </tr>`;}).join('')}</tbody>
+    </table></div></div>`;
+  }
+}
+
+function buildGrid(selected){
+  document.getElementById('cGrid').innerHTML=carriers.map(c=>`
+    <div class="cc"><input type="checkbox" id="c-${c.id}" value="${c.service}" ${selected.has(c.service)?'checked':''} onchange="updCnt()">
+    <label for="c-${c.id}">${c.name}<span class="ck">${c.service}</span></label></div>`).join('');
+  updCnt();
+}
+function filterCList(){const q=document.getElementById('cSearch').value.toLowerCase();document.querySelectorAll('.cc').forEach(e=>e.style.display=e.textContent.toLowerCase().includes(q)?'flex':'none');}
+function selAll(){document.querySelectorAll('#cGrid input').forEach(c=>c.checked=true);updCnt();}
+function selNone(){document.querySelectorAll('#cGrid input').forEach(c=>c.checked=false);updCnt();}
+function updCnt(){document.getElementById('selCnt').textContent=document.querySelectorAll('#cGrid input:checked').length+' selected';}
+
+function openAddModal(){
+  if(!isConn){toast('⚠️','Connect first');return;}
+  editId=null;
+  document.getElementById('modalTitle').textContent='Add Marketplace';
+  document.getElementById('mName').value='';document.getElementById('mName').readOnly=false;
+  document.getElementById('mNotes').value='';document.getElementById('mActive').value='true';
+  document.getElementById('delBtn').style.display='none';
+  buildGrid(new Set());document.getElementById('mpModal').style.display='flex';
+  setTimeout(()=>document.getElementById('mName').focus(),50);
+}
+
+function openEdit(id){
+  const m=marketplaces.find(m=>m.id===id);if(!m)return;
+  editId=id;
+  document.getElementById('modalTitle').textContent='Edit: '+m.name;
+  document.getElementById('mName').value=m.name;document.getElementById('mName').readOnly=false;
+  document.getElementById('mNotes').value=m.notes||'';document.getElementById('mActive').value=String(m.active);
+  document.getElementById('delBtn').style.display='inline-flex';
+  buildGrid(new Set(links.filter(l=>l.marketplace===m.name).map(l=>l.service)));
+  document.getElementById('mpModal').style.display='flex';
+}
+
+function closeModal(){document.getElementById('mpModal').style.display='none';}
+
+async function saveMp(){
+  const name=document.getElementById('mName').value.trim();
+  const notes=document.getElementById('mNotes').value.trim();
+  const active=document.getElementById('mActive').value==='true';
+  if(!name){toast('⚠️','Enter a name');return;}
+  const sel=[...document.querySelectorAll('#cGrid input:checked')].map(c=>c.value);
+  const btn=document.getElementById('saveBtn');
+  btn.innerHTML='<span class="spin"></span>';btn.disabled=true;
+  try{
+    let mpName=name;
+    if(editId){
+      const orig=marketplaces.find(m=>m.id===editId);
+      await sb(`marketplaces?id=eq.${editId}`,'PATCH',{name,notes:notes||null,active});
+      if(orig&&orig.name!==name)
+        await sb(`marketplace_carriers?marketplace=eq.${encodeURIComponent(orig.name)}`,'PATCH',{marketplace:name});
+      mpName=name;
+      await sb(`marketplace_carriers?marketplace=eq.${encodeURIComponent(mpName)}`,'DELETE',null,{'Prefer':'return=minimal'});
+    }else{
+      await sb('marketplaces','POST',{name,notes:notes||null,active});
+      mpName=name;
+    }
+    if(sel.length)
+      await sb('marketplace_carriers','POST',sel.map(s=>({marketplace:mpName,service:s})),{'Prefer':'resolution=merge-duplicates,return=minimal'});
+    closeModal();await loadAll();
+    toast('✅',`${name} saved · ${sel.length} carriers`);
+  }catch(e){toast('⚠️','Save failed: '+e.message);}
+  finally{btn.innerHTML='Save';btn.disabled=false;}
+}
+
+async function confirmDel(id,name){
+  if(!confirm(`Delete "${name}"? All carrier assignments will also be removed.`))return;
+  try{await sb(`marketplaces?id=eq.${id}`,'DELETE',null,{'Prefer':'return=minimal'});await loadAll();toast('🗑️',`"${name}" deleted`);}
+  catch(e){toast('⚠️','Delete failed: '+e.message);}
+}
+function deleteMp(){const m=marketplaces.find(m=>m.id===editId);if(m)confirmDel(m.id,m.name);closeModal();}
+
+function dlTemplate(){
+  dlCSV([
+    ['marketplace_name','carrier_service','notes'],
+    ['Shopify','Ups Express','US domestic'],['Shopify','Fedex Ground',''],['Shopify','DHL eCommerce',''],
+    ['Amazon FBA','Ups Express',''],['Amazon FBA','USPS GA',''],
+    ['Tiktok','Fedex Ground',''],['Tiktok','Ups Express',''],
+    ['Walmart WFS','Ups Express',''],['Walmart WFS','Fedex Ground',''],
+  ],'marketplace_template.csv');
+  toast('⬇️','Template downloaded');
+}
+
+function importCSV(inp){
+  const f=inp.files[0];if(!f)return;
+  if(!isConn){toast('⚠️','Connect first');return;}
+  const r=new FileReader();
+  r.onload=async e=>{
+    const rows=e.target.result.split('\n').slice(1).map(l=>{
+      const p=l.split(',').map(v=>v.trim().replace(/"/g,'').replace(/\r/g,''));
+      return{mp:p[0],service:p[1]};
+    }).filter(r=>r.mp&&r.service);
+    if(!rows.length){toast('⚠️','No valid rows');return;}
+
+    const mpNames=[...new Set(rows.map(r=>r.mp))];
+    for(const n of mpNames){
+      if(!marketplaces.find(m=>m.name===n))
+        try{await sb('marketplaces','POST',{name:n,active:true});}catch{}
+    }
+
+    let ok=0,bad=[];
+    const linkRows=rows.map(r=>{
+      const c=carriers.find(c=>c.service.toLowerCase()===r.service.toLowerCase());
+      if(!c){bad.push(r.service);return null;}
+      return{marketplace:r.mp,service:c.service};
+    }).filter(Boolean);
+
+    if(linkRows.length)
+      try{await sb('marketplace_carriers','POST',linkRows,{'Prefer':'resolution=merge-duplicates,return=minimal'});ok=linkRows.length;}catch(e){toast('⚠️','Error: '+e.message);}
+
+    await loadAll();inp.value='';
+    const u=[...new Set(bad)];
+    toast('✅',`${mpNames.length} marketplaces · ${ok} assignments${u.length?' · Not found: '+u.slice(0,3).join(', '):''}`);
+  };
+  r.readAsText(f);
+}
+
+function dlCSV(rows,fname){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n')],{type:'text/csv'}));
+  a.download=fname;a.click();
+}
+let _tt;
+function toast(icon,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('tIcon').textContent=icon;document.getElementById('tMsg').textContent=msg;
+  t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>
